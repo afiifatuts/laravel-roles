@@ -31,26 +31,10 @@
 
         <div class="modal fade" id="modalAction" tabindex="-1" aria-labelledby="largeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="largeModalLabel">Modal title</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label for="roleName" class="form-label">Name</label>
-                                    <input type="text" placeholder="Role name" class="form-control" id="roleName">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                    </div>
-                </div>
+
+
+
+
             </div>
         </div>
 
@@ -70,7 +54,42 @@
             let id = data.id
             let jenis = data.jenis
 
-            modal.show();
+            $.ajax({
+                method: "get",
+                url: `{{ url('konfigurasi/roles/') }}/${id}/edit `,
+                success: function(res) {
+                    $('#modalAction').find('.modal-dialog').html(res)
+                    modal.show();
+                    store()
+                }
+            });
+
+
+            function store() {
+                $('#formAction').on('submit', function(e) {
+                    e.preventDefault();
+                    const _form = this
+                    const formData = new FormData(_form)
+
+                    $.ajax({
+                        method: "POST",
+                        url: `{{ url('konfigurasi/roles/') }}/${id}`,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(response) {
+                            window.LaravelDataTables["role-table"].ajax.reload();
+                            modal.hide()
+                        }
+                    });
+
+                });
+            }
+
+
 
             // console.log(data)
             // console.log(id)
