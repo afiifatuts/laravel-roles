@@ -83,6 +83,19 @@
                         success: function(response) {
                             window.LaravelDataTables["role-table"].ajax.reload();
                             modal.hide()
+                        },
+                        error: function(res) {
+                            let error = res.responseJSON?.errors;
+                            $(_form).find('.text-danger.text-small').remove()
+                            if (error) {
+                                for (const [key, value] of Object.entries(error)) {
+                                    $(`[name='${key}']`).parent().append(
+                                        `<span class="text-danger text-small">${value}</span>`
+                                    )
+                                }
+                            }
+
+                            // console.log(error);
                         }
                     });
 

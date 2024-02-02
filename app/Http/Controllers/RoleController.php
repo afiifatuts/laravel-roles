@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\RoleDataTable;
+use App\Http\Requests\RoleRequest;
 use App\Models\Role;
 use Illuminate\Auth\Access\Gate;
 use Illuminate\Http\Request;
@@ -58,7 +59,7 @@ class RoleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Role $role)
+    public function update(RoleRequest $request, Role $role)
     {
         $role->name = $request->name;
         $role->guard_name = $request->guard_name;
