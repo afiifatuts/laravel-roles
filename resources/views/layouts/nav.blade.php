@@ -23,7 +23,7 @@
                     <span>Dashboard</span>
                 </a>
             </li>
-            @can('read konfigurasi')
+            {{-- @can('read konfigurasi')
                 <li class="{{ request()->segment(1) == 'konfigurasi' ? 'active open' : '' }}">
                     <a href="#" class="main-menu has-dropdown">
                         <i class="ti-desktop"></i>
@@ -33,11 +33,31 @@
                         @can('read role')
                             <li
                                 class="{{ request()->segment(1) == 'konfigurasi' && request()->segment(2) == 'roles' ? 'active' : '' }}">
-                                <a href="{{ route('roles.index') }}" class="link"><span>Roles</span></a></li>
+                                <a href="{{ route('roles.index') }}" class="link"><span>Roles</span></a>
+                            </li>
                         @endcan
                     </ul>
                 </li>
-            @endcan
+            @endcan --}}
+
+            @foreach (getMenus() as $menu)
+                <li class="{{ request()->segment(1) == $menu->url ? 'active open' : '' }}">
+                    <a href="#" class="main-menu has-dropdown">
+                        <i class="ti-desktop"></i>
+                        <span>{{ $menu->name }}</span>
+                    </a>
+                    <ul class="sub-menu {{ request()->segment(1) == $menu->url ? 'expand' : '' }}">
+                        @foreach ($menu->subMenus as $subMenu)
+                            <li
+                                class="{{ request()->segment(1) == 'konfigurasi' && request()->segment(2) == 'roles' ? 'active' : '' }}">
+                                <a href="{{ url($subMenu->url) }}" class="link"><span>{{ $subMenu->name }}</span></a>
+                            </li>
+                        @endforeach
+
+
+                    </ul>
+                </li>
+            @endforeach
         </ul>
     </div>
 </nav>
