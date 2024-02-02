@@ -29,14 +29,14 @@
         </div>
 
 
+        {{-- Modal --}}
         <div class="modal fade" id="modalAction" tabindex="-1" aria-labelledby="largeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
-
-
-
-
             </div>
         </div>
+
+
+
 
     </div>
 @endsection
@@ -45,6 +45,7 @@
     <script src="{{ asset('') }}vendor/jquery/dist/jquery.min.js"></script>
     <script src="{{ asset('') }}vendor/datatables.net/js/jquery.dataTables.min.js"></script>
     <script src="{{ asset('') }}vendor/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="{{ asset('') }}vendor/sweetalert2/dist/sweetalert2.all.min.js"></script>
     {{ $dataTable->scripts() }}
 
     <script>
@@ -53,6 +54,38 @@
             let data = $(this).data();
             let id = data.id
             let jenis = data.jenis
+            if (jenis == 'delete') {
+                Swal.fire({
+                    title: 'Are you sure',
+                    text: 'You wont be able to revert this!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!',
+                }).then((result) => {
+                    $.ajax({
+                        method: "DELETE",
+                        url: `{{ url('konfigurasi/roles/') }}/${id} `,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(res) {
+                            window.LaravelDataTables["role-table"].ajax.reload();
+                            if (result.isConfirmed) {
+                                Swal.fire(
+                                    'Deleted!',
+                                    res.message,
+                                    res.status
+                                )
+                            }
+                        }
+                    });
+
+
+                })
+                return
+            }
 
             $.ajax({
                 method: "get",
